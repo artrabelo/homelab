@@ -1,0 +1,17 @@
+---
+- name: Instalar o servidor Nginx
+  hosts: local
+  become: yes
+  tasks:
+  
+    - name: Instala o Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Garante que o Nginx está habilitado e rodando
+      systemd:
+        name: nginx
+        state: started
+        enabled: true

@@ -1,0 +1,45 @@
+#cloud-config
+locale: pt_BR.UTF-8
+manage_etc_hosts: true
+ssh_pwauth: false
+
+users:
+  - name: ansible
+    gecos: Ansible
+    groups: users,admin,wheel
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ssh-ed25519 <chave> user@host
+
+package_update: true
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - python3
+  - sudo
+  - ufw
+  - curl
+
+runcmd:
+  # Substitui o sudo-rs pelo sudo tradicional
+  # O sudo-rs, baseado em rust, não funcionou para mim com o Ansible
+  - update-alternatives --set sudo /usr/bin/sudo.ws
+
+  # Configuração de serviços
+  - echo "Configurando serviços"
+  - systemctl enable --now qemu-guest-agent
+  - systemctl enable --now ssh
+
+  # Captura nome da interface padrão e configura o firewall interno (UFW)
+  - IFACE=$(ip route | grep default | awk '{print $5}' | head -n1)
+  - echo "Configurando UFW"
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow in on $IFACE to any port 22 proto tcp comment "Permite SSH"
+  - ufw --force enable
+
+power_state:
+  mode: reboot
+  message: "Configuração concluída, reiniciando"

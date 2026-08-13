@@ -1,0 +1,17 @@
+---
+- name: Python
+  hosts: servers
+  become: yes
+  tasks:
+
+    - name: Verifica se Python está instalado
+      apt:
+        name: python3
+        state: present
+        update_cache: true
+
+    - name: Verifica se PIP está instalado
+      apt:
+        name: python3-pip
+        state: present
+        update_cache: true

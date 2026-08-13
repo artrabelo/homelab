@@ -1,0 +1,29 @@
+---
+- name: Altera a porta do serviço SSH
+  hosts: servers
+  vars:
+    ssh_port: 3822    # Nova porta de acesso
+
+  become: yes
+  tasks:
+
+  - name: Cria o diretório de sockets, se não existir
+    file:
+      path: "/etc/systemd/system/ssh.socket.d"
+      state: directory
+      owner: root
+      group: root
+      mode: 0775
+  
+  - name: Cria o arquivo de override
+    copy:
+      dest: "/etc/systemd/system/ssh.socket.d/override.conf"
+      
+      # O IP ficou definido como 0.0.0.0 para usar com IPv4
+      content: |
+        [Socket]
+        ListenStream=
+        ListenStream=0.0.0.0:{{ ssh_port }}
+      owner: root
+      group: root
+      mode: 0775

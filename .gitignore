@@ -1,0 +1,12 @@
+# Desenvolvimento
+__pycache__
+.vscode
+venv
+.env
+*.log
+
+# Ansible
+hosts.ini
+
+# Scripts
+*.sh

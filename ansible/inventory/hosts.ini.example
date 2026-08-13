@@ -1,0 +1,9 @@
+[servers]
+debian ansible_host=<IP_DO_HOST> ansible_user=<USUARIO>
+
+[windows-ad]
+server-01 ansible_host=<IP_DO_HOST> ansible_user=<USUARIO>
+
+[windows-clients]
+client_01 ansible_host=<IP_DO_HOST> ansible_user=<USUARIO>
+client_02 ansible_host=<IP_DO_HOST> ansible_user=<USUARIO>

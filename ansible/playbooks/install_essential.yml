@@ -1,0 +1,18 @@
+---
+- name: Instala pacotes essenciais
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Atualiza o cache de pacotes
+      apt:
+        update_cache: yes
+
+    - name: Instala pacotes necessários
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - build-essential
+        - curl
+        - git
+        - wget

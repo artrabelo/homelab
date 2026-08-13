@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# ------------------------------------------------
+# Automatiza a criação de um arquivo ISO para uso
+# com cloud-init com genisoimage
+# ------------------------------------------------
+
+VM_NAME="homelab-serv"
+VM_ID=$(( RANDOM % 1000 ))
+VM_INSTANCE="vm-${VM_NAME}-${VM_ID}"
+
+# Diretório onde estarão os arquivos
+WORKDIR="<diretório_dos_arquivos>"
+
+# Gera o arquivo meta-data
+cat << EOF > "${WORKDIR}/meta-data"
+instance-id: ${INSTANCE_ID}
+local-hostname: ${VM_NAME}
+EOF
+
+# Gera o arquivo user-data, se não existir
+if [[ ! -f "$WORKDIR/user-data" ]]; then
+    echo "*   Arquivo não presente: user-data"
+    cat << EOF > "${WORKDIR}/user-data"
+#cloud-config
+package-update: true
+packages:
+  - qemu-guest-agent
+  - curl
+EOF
+fi
+
+# Cria um vendor-data vazio
+touch "$WORKDIR/vendor-data"
+
+# Cria o arquivo ISO
+ISO_NAME="<caminho\do\arquivo.iso>"
+echo "*   Criando o arquivo ISO"
+genisoimage -output "$ISO_NAME" -volid cidata -joliet -rock "$WORKDIR" && \
+
+echo "*   Arquivo $ISO_FILE criado com sucesso."
