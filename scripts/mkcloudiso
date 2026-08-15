@@ -14,7 +14,7 @@ WORKDIR="<diretório_dos_arquivos>"
 
 # Gera o arquivo meta-data
 cat << EOF > "${WORKDIR}/meta-data"
-instance-id: ${INSTANCE_ID}
+instance-id: "${VM_INSTANCE}"
 local-hostname: ${VM_NAME}
 EOF
 
